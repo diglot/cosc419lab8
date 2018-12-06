@@ -1,0 +1,82 @@
+import sqlite3
+from flask import g
+from flask import request
+from flask import Markup
+from flask import Flask, render_template, session
+import random
+
+MyApp = Flask(__name__)
+
+MyApp.secret_key = "shittylittlesecret"
+
+DATABASE = '/var/www/lab8/shit.db'
+
+def get_db():
+    db = getattr(g, '_database', None)
+    if db is None:
+        db = g._database = sqlite3.connect(DATABASE)
+    return db
+
+@MyApp.teardown_appcontext
+def close_connection(exception):
+    db = getattr(g, '_database', None)
+    if db is not None:
+        db.close()
+
+@MyApp.route("/")
+def hello():
+        return render_template('shit.html')
+
+@MyApp.route("/hello")
+def hello2():
+	var = "<h1>Hello World!</h1>"
+        return str(var)
+
+@MyApp.route("/login")
+def login():
+	return render_template('shitlogin.html')
+
+@MyApp.val_login()
+
+
+@MyApp.route("/logout")
+def logout():
+	session.pop('logged_in', None)
+	return redirect(url_for('hello'))
+
+@MyApp.route("/lottery")
+def lotto():
+	return render_template('shitlottery.html')
+
+if __name__ == "__main__":
+        MyApp.run()
+
+@MyApp.route("/random", methods=['GET'])
+def random2():
+	n = random.randint(0,999)
+	data = Markup("<p>It was the <strong>best</strong> of times, it was the <strong>worst</strong> of times.</p>")
+	return render_template('shitlottery.html', rand=str(n), data=data)
+@MyApp.route('/routes/<var>/<var2>')
+def routesFunc(var=None, var2=None):
+	return var.upper() + var2
+	
+@MyApp.route('/reqType', methods=['GET', 'POST'])
+def reqType():
+	if request.method == 'GET':
+		return 'GET'
+	if request.method == 'POST':
+		return 'POST'
+
+@MyApp.route('/form', methods=['GET'])
+def form():
+	return render_template('shitinput.html')
+
+@MyApp.route('/submit', methods=['POST'])
+def submit():
+	return str(len(str(request.form['input'])))
+
+@MyApp.route('/getTest', methods=['GET'])
+def getTest():
+	return str(request.args.get('key'))
+
+

@@ -1,0 +1,10 @@
+{% extends "shit.html" %}
+{% block title %}
+Form
+{% endblock %}
+{% block content %}
+<form action="/submit" method="POST">
+  <input type="text" name="input">
+  <input type="submit" value="Submit">
+</form>
+{% endblock %}

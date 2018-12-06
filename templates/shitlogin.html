@@ -1,0 +1,25 @@
+{% extends "shit.html" %}
+{% block title %}
+Login
+{% endblock %}
+{% block content %}
+
+{% with messages = get_flashed_messages() %}
+{% if messages %} 
+  {% for message in messages %}
+  <div class="alert alert-danger" role="alert">
+  {{ message }}
+  </div>
+  {% endfor %}
+{% endif %}
+{% endwith %}
+
+<form action="/loginval" method="POST">
+  Username:<br>
+  <input type="text" name="user"><br>
+  Password:<br>
+  <input type="password" name="pass"><br>
+  <input type="submit" value="Login">
+</form>
+{% endblock %}
+
